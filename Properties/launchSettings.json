@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MovieViewer": {
+      "commandName": "Project",
+      "commandLineArgs": "sample.mp4"
+    }
+  }
+}
