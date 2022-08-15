@@ -17,20 +17,41 @@
 		<KeyBinding Key="Left" Command="{Binding GoBackwardCommand}" CommandParameter="0:0:10"/>
 		<KeyBinding Key="Left" Modifiers="Shift" Command="{Binding GoBackwardCommand}" CommandParameter="0:0:5"/>
 		<KeyBinding Key="Left" Modifiers="Ctrl" Command="{Binding GoBackwardCommand}" CommandParameter="0:1:0"/>
+		<KeyBinding Key="F11" Command="{Binding VideoStretchCommand}"/>
+		<KeyBinding Key="Up" Command="{Binding LocationCommand}" CommandParameter="-1"/>
+		<KeyBinding Key="Up" Modifiers="Ctrl" Command="{Binding LocationCommand}" CommandParameter="-20"/>
+		<KeyBinding Key="Down" Command="{Binding LocationCommand}" CommandParameter="1"/>
+		<KeyBinding Key="Down" Modifiers="Ctrl" Command="{Binding LocationCommand}" CommandParameter="20"/>
 	</Window.InputBindings>
-	<Grid>
-		<MediaElement Source="{Binding Movie}" local:MediaPosition.Interval="0:0:0.033"
-			local:MediaPosition.Current="{Binding CurrentPosition,Mode=OneWayToSource}"
-			local:MediaPosition.Required="{Binding RequestPosition,UpdateSourceTrigger=Explicit}">
-			<MediaElement.Style>
-				<Style TargetType="MediaElement">
-					<Setter Property="HorizontalAlignment" Value="Center"/>
-					<Setter Property="VerticalAlignment" Value="Center"/>
-					<Setter Property="Width" Value="7680"/>
-					<Setter Property="Height" Value="4320"/>
-				</Style>
-			</MediaElement.Style>
-		</MediaElement>
-		<TextBlock VerticalAlignment="Bottom" FontSize="40" Text="{Binding CurrentPosition,Mode=OneWay}"/>
+	<Grid Name="HostGrid"
+		local:ElementSizeInformation.LoadOnInitialized="True"
+		local:ElementSizeInformation.Width="{Binding WindowWidth,Mode=OneWayToSource}"
+		local:ElementSizeInformation.Height="{Binding WindowHeight,Mode=OneWayToSource}">
+		<Canvas>
+			<MediaElement Source="{Binding Movie}" local:MediaPosition.Interval="0:0:0.033"
+				local:MediaPosition.Current="{Binding CurrentPosition,Mode=OneWayToSource}"
+				local:MediaPosition.Required="{Binding RequestPosition,Mode=OneWay}"
+				local:MediaInformation.LoadOnMediaOpened="True"
+				local:MediaInformation.VideoHeight="{Binding VideoHeight,Mode=OneWayToSource}"
+				local:MediaInformation.VideoWidth="{Binding VideoWidth,Mode=OneWayToSource}">
+				<MediaElement.Style>
+					<Style TargetType="MediaElement">
+						<Setter Property="Canvas.Left" Value="0"/>
+						<Setter Property="Canvas.Top" Value="0"/>
+						<Setter Property="Width" Value="{Binding ActualWidth,ElementName=HostGrid}"/>
+						<Setter Property="Height" Value="{Binding ActualHeight,ElementName=HostGrid}"/>
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding VideoStretch}" Value="{x:Static local:VideoStretch.Fill}">
+								<Setter Property="Canvas.Left" Value="{Binding ScreenLeft}"/>
+								<Setter Property="Canvas.Top" Value="{Binding ScreenTop}"/>
+								<Setter Property="Width" Value="{Binding ScreenWidth}"/>
+								<Setter Property="Height" Value="{Binding ScreenHeight}"/>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</MediaElement.Style>
+			</MediaElement>
+		</Canvas>
+		<TextBlock VerticalAlignment="Bottom" FontSize="40" Text="{Binding CurrentPosition,Mode=OneWay,StringFormat={}{0:h\\:mm\\:ss\\.fff}}"/>
 	</Grid>
 </Window>
