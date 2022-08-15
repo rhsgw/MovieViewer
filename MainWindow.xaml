@@ -18,19 +18,19 @@
 		<KeyBinding Key="Left" Modifiers="Shift" Command="{Binding GoBackwardCommand}" CommandParameter="0:0:5"/>
 		<KeyBinding Key="Left" Modifiers="Ctrl" Command="{Binding GoBackwardCommand}" CommandParameter="0:1:0"/>
 	</Window.InputBindings>
-	<Grid>
+	<Grid Name="HostGrid">
 		<MediaElement Source="{Binding Movie}" local:MediaPosition.Interval="0:0:0.033"
 			local:MediaPosition.Current="{Binding CurrentPosition,Mode=OneWayToSource}"
-			local:MediaPosition.Required="{Binding RequestPosition,UpdateSourceTrigger=Explicit}">
+			local:MediaPosition.Required="{Binding RequestPosition,Mode=OneWay}">
 			<MediaElement.Style>
 				<Style TargetType="MediaElement">
 					<Setter Property="HorizontalAlignment" Value="Center"/>
 					<Setter Property="VerticalAlignment" Value="Center"/>
-					<Setter Property="Width" Value="7680"/>
-					<Setter Property="Height" Value="4320"/>
+					<Setter Property="Width" Value="{Binding ActualWidth,ElementName=HostGrid}"/>
+					<Setter Property="Height" Value="{Binding ActualHeight,ElementName=HostGrid}"/>
 				</Style>
 			</MediaElement.Style>
 		</MediaElement>
-		<TextBlock VerticalAlignment="Bottom" FontSize="40" Text="{Binding CurrentPosition,Mode=OneWay}"/>
+		<TextBlock VerticalAlignment="Bottom" FontSize="40" Text="{Binding CurrentPosition,Mode=OneWay,StringFormat={}{0:h\\:mm\\:ss\\.fff}}"/>
 	</Grid>
 </Window>

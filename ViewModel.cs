@@ -25,7 +25,7 @@ namespace MovieViewer
 				PropertyChanged?.Invoke(this, curArgs);
 			}
 		}
-		public TimeSpan RequestPosition { get; private set; }
+		public TimeSpan RequestPosition { get; private set; } = TimeSpan.FromMilliseconds(-1);
 
 		public event PropertyChangedEventHandler? PropertyChanged;
 		readonly static PropertyChangedEventArgs reqArgs = new PropertyChangedEventArgs(nameof(RequestPosition));
@@ -39,6 +39,8 @@ namespace MovieViewer
 					var skip = TimeSpan.TryParse(p as string, out var ts) ? ts : TimeSpan.FromSeconds(1);
 					RequestPosition = CurrentPosition + skip;
 					RaiseChanged();
+					RequestPosition = TimeSpan.FromMilliseconds(-1);
+					RaiseChanged();
 				});
 			GoBackwardCommand = new Command(
 				p =>
@@ -46,6 +48,8 @@ namespace MovieViewer
 					var skip = TimeSpan.TryParse(p as string, out var ts) ? ts : TimeSpan.FromSeconds(1);
 					var c = CurrentPosition - skip;
 					RequestPosition = c > TimeSpan.Zero ? c : TimeSpan.Zero;
+					RaiseChanged();
+					RequestPosition = TimeSpan.FromMilliseconds(-1);
 					RaiseChanged();
 				});
 			if(Model.TryGetMovie(out var u)) Movie = u;
