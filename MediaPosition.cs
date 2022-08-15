@@ -53,7 +53,9 @@ namespace MovieViewer
 					(d,e) =>
 					{
 						if (d is not MediaElement me) return;
-						var t = new Timer(_ => me.Dispatcher.BeginInvoke(() => SetCurrent(me, me.Position)), null, (TimeSpan)e.NewValue, (TimeSpan)e.NewValue);
+						var t = new Timer(
+							_ => me.Dispatcher.BeginInvoke((Action)(() => SetCurrent(me,me.Position))), null,
+							(TimeSpan)e.NewValue, (TimeSpan)e.NewValue);
 						SetDisposable(me, t);
 					}));
 
